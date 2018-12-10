@@ -117,12 +117,15 @@ public class BatchConfig {
         return new ConsoleItemWriter<Employee>();
     }
     
+    //the job
     @Bean
     public Job readCSVFilesJob() {
         return jobs
                 .get("readCSVFilesJob")
                 .incrementer(new RunIdIncrementer())
+                .listener(new JobResultListener())
                 .start(stepReaderWriter())
+                .next(stepOne())
                 .build();
     }
 	
