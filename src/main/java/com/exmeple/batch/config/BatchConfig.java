@@ -27,25 +27,43 @@ public class BatchConfig {
 	// Step 1
 	@Bean
 	public Step stepOne() {
-		return steps.get("stepOne").tasklet(new MyTaskOne()).build();
+		return steps.get("stepOne")
+				.tasklet(new MyTaskOne())
+				//configure StepExecutionListener
+				.listener(new StepResultListener())
+				.build();
 	}
 
 	// Step 2
 	@Bean
 	public Step stepTow() {
-		return steps.get("stepTow").tasklet(new MyTaskTow()).build();
+		return steps.get("stepTow")
+				.tasklet(new MyTaskTow())
+				//configure StepExecutionListener
+				.listener(new StepResultListener())
+				.build();
 	}
 
 	// Step 3
 	@Bean
 	public Step stepThree() {
-		return steps.get("stepThree").tasklet(new MyTaskThree()).build();
+		return steps.get("stepThree")
+				//configure StepExecutionListener
+				.listener(new StepResultListener())
+				.tasklet(new MyTaskThree())
+				.build();
 	}
 
 	@Bean
 	public Job jobDemo() {
-		return jobs.get("demoJob").incrementer(new RunIdIncrementer()).start(stepOne()).next(stepTow())
-				.next(stepThree()).build();
+		return jobs.get("demoJob")
+				.incrementer(new RunIdIncrementer())
+				//configure JobExecutionListener
+				.listener(new JobResultListener())
+				.start(stepOne())
+				.next(stepTow())
+				.next(stepThree())
+				.build();
 	}
 
 }
